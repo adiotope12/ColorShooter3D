@@ -100,7 +100,6 @@ public class main : MonoBehaviour
 
             GameObject go = Instantiate<GameObject>(S.prefabPowerUp);
             PowerUp pUp = go.GetComponent<PowerUp>();
-            pUp.SetType(pUpType);
             pUp.transform.position = e.transform.position;
         }
     }

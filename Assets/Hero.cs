@@ -117,6 +117,7 @@ public class Hero : MonoBehaviour
 
                 break;
         }
+        Debug.LogWarning("fweh");
         pUp.AbsorbedBy(this.gameObject);
     }
 

@@ -13,8 +13,6 @@ public class PowerUp : MonoBehaviour
 
     [Header("Dynamic")]
     public eWeaponType type;
-    public GameObject cube;
-    public TextMesh letter;
     public Vector3 rotPerSecond;
     public float birthTime;
     private Rigidbody rigid;
@@ -22,11 +20,9 @@ public class PowerUp : MonoBehaviour
     private  Material cubeMat;
     void Awake()
     {
-        cube = transform.GetChild(0).gameObject;
-        letter = GetComponent<TextMesh>();
+        
         rigid = GetComponent<Rigidbody>();
         bndCheck = GetComponent<BoundsCheck>();
-        cubeMat = cube.GetComponent<Renderer>().material;
 
         Vector3 vel = Random.onUnitSphere;
         vel.z = 0;
@@ -46,21 +42,12 @@ public class PowerUp : MonoBehaviour
 
     void Update()
     {
-        cube.transform.rotation = Quaternion.Euler(rotPerSecond * Time.time);
+        transform.rotation = Quaternion.Euler(rotPerSecond * Time.time);
         float u = (Time.time - (birthTime + lifeTime)) / fadeTime;
         if (u >= 1)
         {
             Destroy(this.gameObject);
             return;
-        }
-        if (u > 0)
-        {
-            Color c = cubeMat.color;
-            c.a = 1f - u;
-            cubeMat.color = c;
-            c = letter.color;
-            c.a = 1f - u;
-            letter.color = c;
         }
 
         if(!bndCheck.isOnScreen)
@@ -78,16 +65,17 @@ public class PowerUp : MonoBehaviour
     //     }
     // }
 
-    public void SetType(eWeaponType wt)
-    {
-        type = wt;
-        WeaponDefinition def = main.GET_WEAPON_DEFINITION(type);
-        cubeMat.color = def.powerUpColor;
-        letter.text = def.letter;
-    }
+    // public void SetType(eWeaponType wt)
+    // {
+    //     type = wt;
+    //     WeaponDefinition def = main.GET_WEAPON_DEFINITION(type);
+    //     cubeMat.color = def.powerUpColor;
+    //     letter.text = def.letter;
+    // }
 
     public void AbsorbedBy(GameObject target)
     {
+        Debug.LogWarning("scheway");
         Destroy(this.gameObject);
     }
 }

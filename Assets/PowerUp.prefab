@@ -107,7 +107,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6845123087220517567}
   - component: {fileID: 6845123087220517566}
-  - component: {fileID: 6845123087220517561}
   - component: {fileID: 6845123087220517560}
   - component: {fileID: -6684074309652472909}
   - component: {fileID: 7789953595253486389}
@@ -176,28 +175,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!102 &6845123087220517561
-TextMesh:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6845123087220517563}
-  m_Text: M
-  m_OffsetZ: -2
-  m_CharacterSize: 0.5
-  m_LineSpacing: 1
-  m_Anchor: 4
-  m_Alignment: 1
-  m_TabSize: 4
-  m_FontSize: 38
-  m_FontStyle: 0
-  m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-  m_Color:
-    serializedVersion: 2
-    rgba: 4294967295
 --- !u!54 &6845123087220517560
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -249,7 +226,5 @@ MonoBehaviour:
   lifeTime: 10
   fadeTime: 4
   type: 0
-  cube: {fileID: 0}
-  letter: {fileID: 0}
   rotPerSecond: {x: 0, y: 0, z: 0}
   birthTime: 0
