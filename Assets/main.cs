@@ -77,6 +77,7 @@ public class main : MonoBehaviour
 
     void Restart()
     {
+        // Add linking to upgrade scene and saving coins here.
         SceneManager.LoadScene("__Scene_0");
     }
 

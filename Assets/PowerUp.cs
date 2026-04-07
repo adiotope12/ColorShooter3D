@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(BoundsCheck))]
 public class PowerUp : MonoBehaviour
 {
+    public CoinCounter coinCounter;
     [Header("Inscribed")]
     public Vector2 rotMinMax = new Vector2(15, 90);
     public Vector2 driftMinMax = new Vector2(.25f, 2);
@@ -18,6 +19,12 @@ public class PowerUp : MonoBehaviour
     private Rigidbody rigid;
     private BoundsCheck bndCheck;
     private  Material cubeMat;
+
+    void Start()
+    {
+        GameObject coinCounterGO = GameObject.Find("CoinCounter");
+        coinCounter = coinCounterGO.GetComponent<CoinCounter>();
+    }
     void Awake()
     {
         
@@ -76,6 +83,7 @@ public class PowerUp : MonoBehaviour
     public void AbsorbedBy(GameObject target)
     {
         Debug.LogWarning("scheway");
+        coinCounter.coins += 10;
         Destroy(this.gameObject);
     }
 }

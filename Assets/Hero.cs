@@ -94,30 +94,6 @@ public class Hero : MonoBehaviour
 
     public void AbsorbPowerUp(PowerUp pUp)
     {
-        switch (pUp.type)
-        {
-            case eWeaponType.shield:
-                shieldLevel++;
-                break;
-            default:
-                Weapon w = GetEmptyWeapon();
-                if(pUp.type == weapons[0].type)
-                {
-                    Weapon weap = GetEmptyWeapon();
-                    if (weap != null)
-                    {
-                        weap.SetType(pUp.type);
-                    }
-                } else 
-                {
-                    ClearWeapons();
-                    Weapon weap = GetEmptyWeapon();
-                    weapons[0].SetType(pUp.type);
-                }
-
-                break;
-        }
-        Debug.LogWarning("fweh");
         pUp.AbsorbedBy(this.gameObject);
     }
 
