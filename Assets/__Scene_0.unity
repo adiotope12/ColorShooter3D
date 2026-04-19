@@ -646,7 +646,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 1
+  m_Radius: 1.5
   m_Height: 10
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
@@ -47139,11 +47139,7 @@ MonoBehaviour:
   prefabEnemy:
   - {fileID: 2757446404278879549, guid: ac8b525bd78d18948b3b26c844480591, type: 3}
   - {fileID: 7207164280185693165, guid: 762b7af3959964b4b9b7806148615e30, type: 3}
-  - {fileID: 2757446404278879549, guid: ac8b525bd78d18948b3b26c844480591, type: 3}
-  - {fileID: 7207164280185693165, guid: 762b7af3959964b4b9b7806148615e30, type: 3}
-  - {fileID: 2757446404278879549, guid: ac8b525bd78d18948b3b26c844480591, type: 3}
-  - {fileID: 7207164280185693165, guid: 762b7af3959964b4b9b7806148615e30, type: 3}
-  - {fileID: 1315284401729150930, guid: 73ce4211a633f534c811f8bb7311747b, type: 3}
+  - {fileID: 3626673117207603660, guid: 1789bea097a82284dbfa15dabcec0cfd, type: 3}
   enemySpawnPerSecond: 0.5
   enemyInsetDefault: 1.5
   gameRestartDelay: 2

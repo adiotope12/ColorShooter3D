@@ -34,6 +34,15 @@ public class main : MonoBehaviour
 
 
     private BoundsCheck bndCheck;
+
+    private enum EnemySpawnSide
+    {
+        Top,
+        Left,
+        Right,
+        Bottom
+    }
+
     void Awake()
     {
         S = this;
@@ -64,9 +73,50 @@ public class main : MonoBehaviour
         Vector3 pos = Vector3.zero;
         float xMin = -bndCheck.camWidth + enemyInset;
         float xMax = bndCheck.camWidth - enemyInset;
-        pos.x = Random.Range(xMin, xMax);
-        pos.y = bndCheck.camHeight + enemyInset;
+        float yMin = -bndCheck.camHeight + enemyInset;
+        float yMax = bndCheck.camHeight - enemyInset;
+
+        EnemySpawnSide spawnSide = (EnemySpawnSide)Random.Range(0, 4);
+        Vector3 moveDirection = Vector3.down;
+        BoundsCheck.eScreenLocs despawnEdge = BoundsCheck.eScreenLocs.offDown;
+
+        switch (spawnSide)
+        {
+            case EnemySpawnSide.Top:
+                pos.x = Random.Range(xMin, xMax);
+                pos.y = bndCheck.camHeight + enemyInset;
+                moveDirection = Vector3.down;
+                despawnEdge = BoundsCheck.eScreenLocs.offDown;
+                break;
+            case EnemySpawnSide.Left:
+                pos.x = -bndCheck.camWidth - enemyInset;
+                pos.y = Random.Range(yMin, yMax);
+                moveDirection = Vector3.right;
+                despawnEdge = BoundsCheck.eScreenLocs.offRight;
+                break;
+            case EnemySpawnSide.Right:
+                pos.x = bndCheck.camWidth + enemyInset;
+                pos.y = Random.Range(yMin, yMax);
+                moveDirection = Vector3.left;
+                despawnEdge = BoundsCheck.eScreenLocs.offLeft;
+                break;
+            default:
+                pos.x = Random.Range(xMin, xMax);
+                pos.y = -bndCheck.camHeight - enemyInset;
+                moveDirection = Vector3.up;
+                despawnEdge = BoundsCheck.eScreenLocs.offUp;
+                break;
+        }
+
         go.transform.position = pos;
+
+        Enemy enemy = go.GetComponent<Enemy>();
+        if (enemy != null)
+        {
+            enemy.SetMoveDirection(moveDirection);
+            enemy.SetDespawnEdge(despawnEdge);
+        }
+
         Invoke("SpawnEnemy", 1f / enemySpawnPerSecond);
     }
 
