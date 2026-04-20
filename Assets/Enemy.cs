@@ -80,7 +80,7 @@ public class Enemy : MonoBehaviour
         {
             if(bndCheck.isOnScreen)
             {
-                health -= main.GET_WEAPON_DEFINITION(p.type).damageOnHit;
+                health -= main.GET_PROJECTILE_DAMAGE(p.type);
                 if (health <= 0)
                 {
                     if(!calledShipDestroyed) 

@@ -67,7 +67,7 @@ public class Enemy_4 : Enemy
             {
                 GameObject hitGO = coll.contacts[0].thisCollider.gameObject;
                 if (hitGO == otherGO) hitGO = coll.contacts[0].otherCollider.gameObject;
-                float dmg = main.GET_WEAPON_DEFINITION(p.type).damageOnHit;
+                float dmg = main.GET_PROJECTILE_DAMAGE(p.type);
 
                 bool shieldFound = false;
                 foreach (EnemyShield es in allShields)

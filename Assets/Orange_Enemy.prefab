@@ -504,7 +504,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7207164280185693165}
-  m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -10.69745, y: 4.4199753, z: -9.99829}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
@@ -513,7 +513,7 @@ Transform:
   - {fileID: 3388740930084212571}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 180, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8117513736157479865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -531,6 +531,8 @@ MonoBehaviour:
   health: 3
   score: 100
   powerUpDropChance: 1
+  moveDirection: {x: 0, y: -1, z: 0}
+  despawnEdge: 8
   waveFrequency: 2
   waveWidth: 4
   waveRotY: 45

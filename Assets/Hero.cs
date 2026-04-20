@@ -10,18 +10,25 @@ public class Hero : MonoBehaviour
 
     [Header("Inscribed")]
     public float speed = 30;
+    public float baseRotationSpeed = 150f;
     public float rollMult = -45;
     public float pitchMult = 30;
     public GameObject projectilePrefab;
     public float projectileSpeed = 40;
     public Weapon[] weapons;
 
-    [Header("Dynamic")] [Range(0,4)]
+    [Header("Dynamic")] [Range(0, 20)]
     public float _shieldLevel = 1;
+    public float maxShieldLevel = 4;
     [Tooltip("This field holds a  referrence to  the last triggering GameObject")]
     public GameObject lastTriggerGo = null;
     public delegate void WeaponFireDelegate();
     public WeaponFireDelegate fireEvent;
+
+    private float baseMoveSpeed;
+    private float baseMaxShieldLevel;
+    private float appliedRotationSpeed;
+    private float baseProjectileSpeed;
 
      void Awake()
     {
@@ -33,6 +40,11 @@ public class Hero : MonoBehaviour
         {
             Debug.LogError("Hero.Awake() - Attempted to assign second Hero.S!");
         }
+
+        baseMoveSpeed = speed;
+        baseMaxShieldLevel = maxShieldLevel;
+        baseProjectileSpeed = projectileSpeed;
+        ApplyUpgradeStats();
 
         ClearWeapons();
         
@@ -55,19 +67,33 @@ public class Hero : MonoBehaviour
             fireEvent();
         }
 
-        float rotationSpeed = 150f; // tweak this
-
 // Rotate left (A)
         if (Input.GetKey(KeyCode.A))
         {
-            transform.Rotate(0, 0, rotationSpeed * Time.deltaTime);
+            transform.Rotate(0, 0, appliedRotationSpeed * Time.deltaTime);
         }
 
         // Rotate right (F)
         if (Input.GetKey(KeyCode.F))
         {
-            transform.Rotate(0, 0, -rotationSpeed * Time.deltaTime);
+            transform.Rotate(0, 0, -appliedRotationSpeed * Time.deltaTime);
         }
+    }
+
+    void ApplyUpgradeStats()
+    {
+        int hpLevel = UpgradeButton.GetStoredUpgradeLevel("HP", 0);
+        int speedLevel = UpgradeButton.GetStoredUpgradeLevel("Speed", 0);
+        int movementLevel = UpgradeButton.GetStoredUpgradeLevel("Movement", 0);
+        int rotationLevel = UpgradeButton.GetStoredUpgradeLevel("Rotation", 0);
+        int projectileSpeedLevel = UpgradeButton.GetStoredUpgradeLevel("Projectile Speed", 0);
+
+        // +1 to base stat for each upgrade level.
+        speed = baseMoveSpeed + speedLevel + movementLevel;
+        maxShieldLevel = baseMaxShieldLevel + hpLevel;
+        appliedRotationSpeed = baseRotationSpeed + rotationLevel;
+        projectileSpeed = baseProjectileSpeed + projectileSpeedLevel;
+        shieldLevel = maxShieldLevel;
     }
     
     void OnTriggerEnter(Collider other){
@@ -102,7 +128,7 @@ public class Hero : MonoBehaviour
         get { return _shieldLevel; }
         set
         {
-            _shieldLevel = Mathf.Min(value, 4);
+            _shieldLevel = Mathf.Min(value, maxShieldLevel);
             if (value < 0)
             {
                 Destroy(this.gameObject);

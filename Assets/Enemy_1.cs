@@ -12,8 +12,6 @@ public class Enemy_1 : Enemy
     public float waveWidth = 4f;
     [Tooltip("Amount the ship will roll left and right with the sine wave")]
     public float waveRotY = 45f;
-    [Tooltip("Model heading correction in degrees. 180 flips a backwards model.")]
-    public float headingOffsetY = 180f;
 
     private float x0;
     private float birthTime;
@@ -23,7 +21,7 @@ public class Enemy_1 : Enemy
     {
         x0 = pos.x;
         birthTime = Time.time;
-        spawnFacingRotation = transform.rotation * Quaternion.Euler(0f, headingOffsetY, 0f);
+        spawnFacingRotation = transform.rotation;
     }
 
     public override void Move()
@@ -43,7 +41,7 @@ public class Enemy_1 : Enemy
     public override void SetMoveDirection(Vector3 newDirection)
     {
         base.SetMoveDirection(newDirection);
-        spawnFacingRotation = transform.rotation * Quaternion.Euler(0f, headingOffsetY, 0f);
+        spawnFacingRotation = transform.rotation;
     }
     
 

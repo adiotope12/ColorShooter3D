@@ -39,6 +39,7 @@ public class Weapon : MonoBehaviour
     public float nextShotTime;
     private GameObject weaponModel;
     private Transform shotPointTrans;
+    private Hero hero;
 
     void Start()
     {
@@ -50,7 +51,7 @@ public class Weapon : MonoBehaviour
         shotPointTrans = transform.GetChild(0);
         SetType(_type);
 
-        Hero hero = GetComponentInParent<Hero>();
+        hero = GetComponentInParent<Hero>();
         if (hero != null)        {
             hero.fireEvent += () => Fire(hero.transform);
         }
@@ -91,7 +92,12 @@ public class Weapon : MonoBehaviour
         if (Time.time < nextShotTime) return;
 
         ProjectileHero p;
-        Vector3 vel = trans.up * def.velocity;
+        float shotSpeed = def.velocity;
+        if (hero != null)
+        {
+            shotSpeed = hero.projectileSpeed;
+        }
+        Vector3 vel = trans.up * shotSpeed;
         switch (type)
         {
             case eWeaponType.blaster:
