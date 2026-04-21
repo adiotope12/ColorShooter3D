@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour
     public float health = 10;
     public int score = 100;
     public float powerUpDropChance = 1f;
+    public bool isBoss = false;
     protected bool calledShipDestroyed = false;
     [SerializeField] protected Vector3 moveDirection = Vector3.down;
     [SerializeField] protected BoundsCheck.eScreenLocs despawnEdge = BoundsCheck.eScreenLocs.offDown;

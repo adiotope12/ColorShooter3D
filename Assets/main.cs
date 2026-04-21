@@ -9,6 +9,7 @@ public class main : MonoBehaviour
     static private main S;
     static private Dictionary<eWeaponType, WeaponDefinition> WEAP_DICT;
     static private HashSet<int> bossThresholdsTriggered = new HashSet<int>();
+    static private int bossesDefeated = 0;
     [Header("Inscribed")]
     public bool spawnEnemies = true;
     public GameObject[] prefabEnemy;
@@ -16,6 +17,7 @@ public class main : MonoBehaviour
     public float enemySpawnPerSecond = 0.5f;
     public float enemyInsetDefault = 1.5f;
     public float gameRestartDelay = 2f;
+    public string startSceneName = "__Scene_0";
     public GameObject prefabPowerUp;
     public int[] bossScoreThresholds = new int[] { 50, 100, 200 };
     public Score distanceScore;
@@ -43,6 +45,11 @@ public class main : MonoBehaviour
         return baseDamage * damageMultiplier;
     }
 
+    static public int GET_COIN_VALUE()
+    {
+        return 10 + (bossesDefeated * 10);
+    }
+
 
 
     private BoundsCheck bndCheck;
@@ -59,6 +66,7 @@ public class main : MonoBehaviour
     void Awake()
     {
         S = this;
+        bossesDefeated = 0;
         bndCheck = GetComponent<BoundsCheck>();
         bossThresholdsTriggered.Clear();
         Invoke("SpawnEnemy", GetEnemySpawnDelay());
@@ -115,21 +123,28 @@ public class main : MonoBehaviour
 
     float GetEnemySpeedMultiplier()
     {
-        // Linearly scale from 1x to 3x as distance score goes from 0 to 200.
+        // Linearly scale from 1x to 10x as distance score goes from 0 to 200.
         float t = Mathf.Clamp01(GetCurrentDistanceScore() / 200f);
-        return Mathf.Lerp(1f, 3f, t);
+        return Mathf.Lerp(1f, 10f, t);
     }
 
     float GetEnemyHealthMultiplier()
     {
-        // Linearly scale from 1x to 5x as distance score goes from 0 to 200.
+        // Linearly scale from 1x to 10x as distance score goes from 0 to 200.
         float t = Mathf.Clamp01(GetCurrentDistanceScore() / 200f);
-        return Mathf.Lerp(1f, 5f, t);
+        return Mathf.Lerp(1f, 10f, t);
+    }
+
+    float GetEnemySpawnRateMultiplier()
+    {
+        // Linearly scale spawn rate from 1x to 2x as distance score goes from 0 to 200.
+        float t = Mathf.Clamp01(GetCurrentDistanceScore() / 200f);
+        return Mathf.Lerp(1f, 2f, t);
     }
 
     float GetEnemySpawnDelay()
     {
-        float effectiveSpawnPerSecond = enemySpawnPerSecond * GetEnemySpeedMultiplier();
+        float effectiveSpawnPerSecond = enemySpawnPerSecond * GetEnemySpawnRateMultiplier();
         return 1f / Mathf.Max(0.01f, effectiveSpawnPerSecond);
     }
 
@@ -206,8 +221,8 @@ public class main : MonoBehaviour
 
     void Restart()
     {
-        // Add linking to upgrade scene and saving coins here.
-        SceneManager.LoadScene("__Scene_0");
+        // Load the configured start/menu scene after death delay.
+        SceneManager.LoadScene(startSceneName);
     }
 
     static public void HERO_DIED()
@@ -222,6 +237,11 @@ public class main : MonoBehaviour
         Debug.LogWarning("main.S is null in SHIP_DESTROYED! Check initialization order.");
         return;
     }
+
+        if (e != null && e.isBoss)
+        {
+            bossesDefeated++;
+        }
 
         if (Random.value <= e.powerUpDropChance)
         {
@@ -252,6 +272,7 @@ public class main : MonoBehaviour
         Enemy enemy = go.GetComponent<Enemy>();
         if (enemy != null)
         {
+            enemy.isBoss = true;
             float speedMultiplier = GetEnemySpeedMultiplier();
             enemy.speed *= speedMultiplier;
             enemy.health *= GetEnemyHealthMultiplier();

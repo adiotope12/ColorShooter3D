@@ -7,6 +7,8 @@ using TMPro;
 public class UpgradeButton : MonoBehaviour
 {
     private const string UpgradeKeyPrefix = "UpgradeLevel_";
+    private const int BaseUpgradeCost = 20;
+    private const int CostIncreasePerLevel = 5;
 
     [Header("Inscribed")]
     [SerializeField] private string upgradeType = "Damage";
@@ -28,6 +30,7 @@ public class UpgradeButton : MonoBehaviour
 
         LoadLevel();
         RefreshLabel();
+        RefreshButtonState();
     }
 
     void OnDestroy()
@@ -48,11 +51,24 @@ public class UpgradeButton : MonoBehaviour
         RefreshLabel();
     }
 
+    void Update()
+    {
+        RefreshButtonState();
+    }
+
     public void OnButtonPressed()
     {
+        int cost = GetCurrentUpgradeCost();
+        if (!CoinCounter.TrySpendCoins(cost))
+        {
+            RefreshButtonState();
+            return;
+        }
+
         upgradeLevel++;
         SaveLevel();
         RefreshLabel();
+        RefreshButtonState();
     }
 
     public void SetUpgradeType(string newType)
@@ -65,6 +81,11 @@ public class UpgradeButton : MonoBehaviour
     public int GetUpgradeLevel()
     {
         return upgradeLevel;
+    }
+
+    public int GetCurrentUpgradeCost()
+    {
+        return BaseUpgradeCost + ((upgradeLevel - 1) * CostIncreasePerLevel);
     }
 
     public static int GetStoredUpgradeLevel(string type, int defaultLevel = 1)
@@ -111,5 +132,15 @@ public class UpgradeButton : MonoBehaviour
         }
 
         label.text = "Upgrade " + upgradeType + "\n(LV. " + upgradeLevel + ")";
+    }
+
+    void RefreshButtonState()
+    {
+        if (button == null)
+        {
+            return;
+        }
+
+        button.interactable = CoinCounter.GetCoins() >= GetCurrentUpgradeCost();
     }
 }

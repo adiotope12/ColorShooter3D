@@ -590,6 +590,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 30
+  baseRotationSpeed: 150
   rollMult: -45
   pitchMult: 30
   projectilePrefab: {fileID: 7115384145995224930, guid: dc5690e1d06aa3f46b668a4d1e8e4c4d, type: 3}
@@ -601,6 +602,7 @@ MonoBehaviour:
   - {fileID: 1453393497}
   - {fileID: 679108649}
   _shieldLevel: 4
+  maxShieldLevel: 4
   lastTriggerGo: {fileID: 0}
 --- !u!4 &390178024
 Transform:
@@ -47146,6 +47148,7 @@ MonoBehaviour:
   enemySpawnPerSecond: 0.5
   enemyInsetDefault: 1.5
   gameRestartDelay: 2
+  startSceneName: start
   prefabPowerUp: {fileID: 7424084762285048408, guid: 7055aa9dbebd8fc408430bf7d97963e7, type: 3}
   bossScoreThresholds: 3200000064000000c8000000
   distanceScore: {fileID: 0}
@@ -95715,7 +95718,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 986eaa9fe73ed914bba59c9ba9d9a544, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coins: 0
 --- !u!4 &2011309407 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4359217766878554361, guid: ed38e78f7446dcf47b45c531bdf2c260, type: 3}

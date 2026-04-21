@@ -91,13 +91,10 @@ public class Weapon : MonoBehaviour
         if(!gameObject.activeInHierarchy) return;
         if (Time.time < nextShotTime) return;
 
+        nextShotTime = Time.time + GetAdjustedDelayBetweenShots();
+
         ProjectileHero p;
-        float shotSpeed = def.velocity;
-        if (hero != null)
-        {
-            shotSpeed = hero.projectileSpeed;
-        }
-        Vector3 vel = trans.up * shotSpeed;
+        Vector3 vel = trans.up * def.velocity;
         switch (type)
         {
             case eWeaponType.blaster:
@@ -129,9 +126,15 @@ public class Weapon : MonoBehaviour
         p.transform.rotation = transform.rotation;
 
         p.type = type;
-        nextShotTime = Time.time + def.delayBetweenShots;
 
         return (p);
+    }
+
+    private float GetAdjustedDelayBetweenShots()
+    {
+        int projectileRateLevel = UpgradeButton.GetStoredUpgradeLevel("Projectile Speed", 0);
+        float fireRateMultiplier = 1f + projectileRateLevel;
+        return def.delayBetweenShots / Mathf.Max(0.01f, fireRateMultiplier);
     }
 
 }

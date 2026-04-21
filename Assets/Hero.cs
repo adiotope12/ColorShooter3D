@@ -28,7 +28,6 @@ public class Hero : MonoBehaviour
     private float baseMoveSpeed;
     private float baseMaxShieldLevel;
     private float appliedRotationSpeed;
-    private float baseProjectileSpeed;
 
      void Awake()
     {
@@ -43,7 +42,6 @@ public class Hero : MonoBehaviour
 
         baseMoveSpeed = speed;
         baseMaxShieldLevel = maxShieldLevel;
-        baseProjectileSpeed = projectileSpeed;
         ApplyUpgradeStats();
 
         ClearWeapons();
@@ -82,17 +80,13 @@ public class Hero : MonoBehaviour
 
     void ApplyUpgradeStats()
     {
-        int hpLevel = UpgradeButton.GetStoredUpgradeLevel("HP", 0);
+        int hpLevel = UpgradeButton.GetStoredUpgradeLevel("Health", 0);
         int speedLevel = UpgradeButton.GetStoredUpgradeLevel("Speed", 0);
-        int movementLevel = UpgradeButton.GetStoredUpgradeLevel("Movement", 0);
-        int rotationLevel = UpgradeButton.GetStoredUpgradeLevel("Rotation", 0);
-        int projectileSpeedLevel = UpgradeButton.GetStoredUpgradeLevel("Projectile Speed", 0);
 
         // +1 to base stat for each upgrade level.
-        speed = baseMoveSpeed + speedLevel + movementLevel;
+        speed = baseMoveSpeed + speedLevel;
         maxShieldLevel = baseMaxShieldLevel + hpLevel;
-        appliedRotationSpeed = baseRotationSpeed + rotationLevel;
-        projectileSpeed = baseProjectileSpeed + projectileSpeedLevel;
+        appliedRotationSpeed = baseRotationSpeed + speedLevel;
         shieldLevel = maxShieldLevel;
     }
     
@@ -106,6 +100,12 @@ public class Hero : MonoBehaviour
         PowerUp pUp = go.GetComponent<PowerUp>();
         if (enemy != null)
         {
+            if (enemy.isBoss)
+            {
+                shieldLevel = -1;
+                return;
+            }
+
             shieldLevel--;
             Destroy(go);
         } else if (pUp != null)

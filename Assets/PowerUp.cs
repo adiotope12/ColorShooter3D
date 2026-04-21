@@ -83,7 +83,7 @@ public class PowerUp : MonoBehaviour
     public void AbsorbedBy(GameObject target)
     {
         Debug.LogWarning("scheway");
-        coinCounter.coins += 10;
+        coinCounter.coins += main.GET_COIN_VALUE();
         Destroy(this.gameObject);
     }
 }

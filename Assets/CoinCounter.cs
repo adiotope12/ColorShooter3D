@@ -11,25 +11,51 @@ public class CoinCounter : MonoBehaviour
     private static int sharedCoins = 0;
     private static bool hasLoadedCoins = false;
 
+    static void EnsureLoaded()
+    {
+        if (hasLoadedCoins) return;
+        sharedCoins = PlayerPrefs.GetInt(CoinsKey, 0);
+        hasLoadedCoins = true;
+    }
+
+    public static int GetCoins()
+    {
+        EnsureLoaded();
+        return sharedCoins;
+    }
+
+    public static void SetCoins(int value)
+    {
+        EnsureLoaded();
+        sharedCoins = Mathf.Max(0, value);
+        PlayerPrefs.SetInt(CoinsKey, sharedCoins);
+    }
+
+    public static bool TrySpendCoins(int cost)
+    {
+        EnsureLoaded();
+        int clampedCost = Mathf.Max(0, cost);
+        if (sharedCoins < clampedCost)
+        {
+            return false;
+        }
+
+        sharedCoins -= clampedCost;
+        PlayerPrefs.SetInt(CoinsKey, sharedCoins);
+        return true;
+    }
+
     public int coins
     {
-        get { return sharedCoins; }
-        set
-        {
-            sharedCoins = Mathf.Max(0, value);
-            PlayerPrefs.SetInt(CoinsKey, sharedCoins);
-        }
+        get { return GetCoins(); }
+        set { SetCoins(value); }
     }
 
     private TextMeshProUGUI uiText;
 
     void Awake()
     {
-        if (!hasLoadedCoins)
-        {
-            sharedCoins = PlayerPrefs.GetInt(CoinsKey, 0);
-            hasLoadedCoins = true;
-        }
+        EnsureLoaded();
     }
 
     // Start is called before the first frame update

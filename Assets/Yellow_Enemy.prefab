@@ -98,11 +98,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70eab142abdad314094ace1ef9b97602, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3
+  speed: 4
   fireRate: 0.3
   health: 3
   score: 100
   powerUpDropChance: 1
+  isBoss: 0
   moveDirection: {x: 0, y: -1, z: 0}
   despawnEdge: 8
   reAimInterval: 0.5

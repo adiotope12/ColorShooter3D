@@ -526,11 +526,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ae8dd37a4e222b41b94b6dd5509aa62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 20
+  speed: 10
   fireRate: 0.3
   health: 3
   score: 100
   powerUpDropChance: 1
+  isBoss: 0
   moveDirection: {x: 0, y: -1, z: 0}
   despawnEdge: 8
   waveFrequency: 2
