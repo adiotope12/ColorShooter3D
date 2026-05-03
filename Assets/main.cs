@@ -50,6 +50,11 @@ public class main : MonoBehaviour
         return 10 + (bossesDefeated * 10);
     }
 
+    static public float GET_ENEMY_CONTACT_DAMAGE()
+    {
+        return 1f;
+    }
+
 
 
     private BoundsCheck bndCheck;
@@ -114,7 +119,7 @@ public class main : MonoBehaviour
             if (previousDistanceScore < threshold && currentDistanceScore >= threshold && !bossThresholdsTriggered.Contains(threshold))
             {
                 bossThresholdsTriggered.Add(threshold);
-                SpawnBoss();
+                SpawnBoss(threshold);
             }
         }
 
@@ -132,14 +137,14 @@ public class main : MonoBehaviour
     {
         // Linearly scale from 1x to 10x as distance score goes from 0 to 200.
         float t = Mathf.Clamp01(GetCurrentDistanceScore() / 200f);
-        return Mathf.Lerp(1f, 10f, t);
+        return Mathf.Lerp(1f, 15f, t);
     }
 
     float GetEnemySpawnRateMultiplier()
     {
         // Linearly scale spawn rate from 1x to 2x as distance score goes from 0 to 200.
         float t = Mathf.Clamp01(GetCurrentDistanceScore() / 200f);
-        return Mathf.Lerp(1f, 2f, t);
+        return Mathf.Lerp(1f, 3f, t);
     }
 
     float GetEnemySpawnDelay()
@@ -241,6 +246,14 @@ public class main : MonoBehaviour
         if (e != null && e.isBoss)
         {
             bossesDefeated++;
+
+            // Check if this was the last boss (all thresholds triggered and all defeated)
+            if (bossThresholdsTriggered.Count >= S.bossScoreThresholds.Length &&
+                bossesDefeated >= S.bossScoreThresholds.Length)
+            {
+                S.TriggerWinSequence();
+                return; // skip powerup drop for the final boss
+            }
         }
 
         if (Random.value <= e.powerUpDropChance)
@@ -255,7 +268,50 @@ public class main : MonoBehaviour
         }
     }
 
-    void SpawnBoss()
+    void TriggerWinSequence()
+    {
+        spawnEnemies = false;
+        CancelInvoke(nameof(SpawnEnemy));
+
+        // Destroy all active enemies
+        Enemy[] allEnemies = FindObjectsOfType<Enemy>();
+        foreach (Enemy e in allEnemies)
+        {
+            Destroy(e.gameObject);
+        }
+
+        // Tell hero to fly off the top of the screen
+        if (Hero.S != null)
+        {
+            Hero.S.StartFlyOff();
+        }
+    }
+
+    static public void HERO_ESCAPED()
+    {
+        S.Restart();
+    }
+
+    bool IsFinalBossThreshold(int threshold)
+    {
+        if (bossScoreThresholds == null || bossScoreThresholds.Length == 0)
+        {
+            return false;
+        }
+
+        int maxThreshold = bossScoreThresholds[0];
+        for (int i = 1; i < bossScoreThresholds.Length; i++)
+        {
+            if (bossScoreThresholds[i] > maxThreshold)
+            {
+                maxThreshold = bossScoreThresholds[i];
+            }
+        }
+
+        return threshold >= maxThreshold;
+    }
+
+    void SpawnBoss(int threshold)
     {
         GameObject go = Instantiate<GameObject>(prefabBoss);
 
@@ -275,7 +331,14 @@ public class main : MonoBehaviour
             enemy.isBoss = true;
             float speedMultiplier = GetEnemySpeedMultiplier();
             enemy.speed *= speedMultiplier;
-            enemy.health *= GetEnemyHealthMultiplier();
+            enemy.health *= GetEnemyHealthMultiplier() / 2f;
+
+            // Final boss gets half HP relative to other bosses.
+            if (IsFinalBossThreshold(threshold))
+            {
+                enemy.health *= 0.5f;
+            }
+
             enemy.SetMoveDirection(Vector3.down);
             enemy.SetDespawnEdge(BoundsCheck.eScreenLocs.offDown);
         }

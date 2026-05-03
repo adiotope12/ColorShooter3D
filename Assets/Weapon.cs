@@ -94,7 +94,7 @@ public class Weapon : MonoBehaviour
         nextShotTime = Time.time + GetAdjustedDelayBetweenShots();
 
         ProjectileHero p;
-        Vector3 vel = trans.up * def.velocity;
+        Vector3 vel = trans.up * GetAdjustedVelocity();
         switch (type)
         {
             case eWeaponType.blaster:
@@ -128,6 +128,12 @@ public class Weapon : MonoBehaviour
         p.type = type;
 
         return (p);
+    }
+
+    private float GetAdjustedVelocity()
+    {
+        int speedLevel = UpgradeButton.GetStoredUpgradeLevel("Speed", 0);
+        return def.velocity * (1f + 0.5f * speedLevel);
     }
 
     private float GetAdjustedDelayBetweenShots()

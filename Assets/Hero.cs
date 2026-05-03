@@ -28,6 +28,8 @@ public class Hero : MonoBehaviour
     private float baseMoveSpeed;
     private float baseMaxShieldLevel;
     private float appliedRotationSpeed;
+    private bool flyingOff = false;
+    private BoundsCheck bndCheck;
 
      void Awake()
     {
@@ -42,6 +44,7 @@ public class Hero : MonoBehaviour
 
         baseMoveSpeed = speed;
         baseMaxShieldLevel = maxShieldLevel;
+        bndCheck = GetComponent<BoundsCheck>();
         ApplyUpgradeStats();
 
         ClearWeapons();
@@ -52,6 +55,22 @@ public class Hero : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (flyingOff)
+        {
+            // Fly straight up, ignoring player input
+            Vector3 flyPos = transform.position;
+            flyPos.y += speed * Time.deltaTime;
+            transform.position = flyPos;
+
+            // Once well off the top of the screen, signal main to load the start scene
+            Vector3 viewportPos = Camera.main.WorldToViewportPoint(transform.position);
+            if (viewportPos.y > 1.5f)
+            {
+                main.HERO_ESCAPED();
+            }
+            return;
+        }
+
         float hAxis = Input.GetAxis("Horizontal");
         float vAxis = Input.GetAxis("Vertical");
 
@@ -78,6 +97,15 @@ public class Hero : MonoBehaviour
         }
     }
 
+    public void StartFlyOff()
+    {
+        flyingOff = true;
+        if (bndCheck != null)
+        {
+            bndCheck.keepOnScreen = false;
+        }
+    }
+
     void ApplyUpgradeStats()
     {
         int hpLevel = UpgradeButton.GetStoredUpgradeLevel("Health", 0);
@@ -86,7 +114,8 @@ public class Hero : MonoBehaviour
         // +1 to base stat for each upgrade level.
         speed = baseMoveSpeed + speedLevel;
         maxShieldLevel = baseMaxShieldLevel + hpLevel;
-        appliedRotationSpeed = baseRotationSpeed + speedLevel;
+        float speedRatio = speed / Mathf.Max(0.01f, baseMoveSpeed);
+        appliedRotationSpeed = baseRotationSpeed * speedRatio;
         shieldLevel = maxShieldLevel;
     }
     
@@ -106,7 +135,7 @@ public class Hero : MonoBehaviour
                 return;
             }
 
-            shieldLevel--;
+            shieldLevel -= main.GET_ENEMY_CONTACT_DAMAGE();
             Destroy(go);
         } else if (pUp != null)
         {
